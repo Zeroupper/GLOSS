@@ -4,16 +4,13 @@ FROM continuumio/miniconda3
 # Set the working directory
 WORKDIR /app
 
-ENV AZURE_OPENAI_API_KEY="add your key"
-ENV AZURE_OPENAI_API_ENDPOINT="add your endpoint"
+ENV OPENROUTER_API_KEY="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"
 ENV MONGO_URI="add your mongo URI"
-ENV OPENAI_API_KEY="add your key"
 ENV RUNNING_IN_DOCKER=true
 
 # Copy the environment file and install script to the Docker image
-COPY environment.yml .
+COPY environment_linux.yml .
 COPY install_packages.sh .
-
 
 # Ensure the install script has execute permissions
 RUN chmod +x install_packages.sh

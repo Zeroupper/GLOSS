@@ -56,11 +56,11 @@ conda activate gloss-sensemaking (or preferred-env-name)
 ***What this does:*** Creates an isolated Python environment with all the right packages so GLOSS works correctly.
 
 ### 4. Setting up Config and ENV variables
-Go to `agents/config.py` and set up config variables. By default, GLOSS uses GPT-4o:
+Go to `agents/config.py` and set up config variables. By default, GLOSS uses OpenRouter (model id `openai/gpt-4o-mini`):
 
 ```bash
-USE_AZURE = False #(True if using Azure deployment)
-USE_GPT5 = False #(True if using GPT-5)
+USE_OPENROUTER = True  # OpenRouter is the only supported provider
+OPENROUTER_MODEL = "openai/gpt-4o-mini"  # change to any OpenRouter model id you prefer
 ONLY_CODE_FUNCTIONS = True #(True if all runs use code generation)
 VERBOSE = True #(True if need more verbosity when running sensemaking_process.py)
 USE_CSV = True #(True if using CSV as data, keep it true as demo uses csv data)
@@ -68,11 +68,11 @@ DOCKER_NAME = "gloss-sensemaking-code" # (name of Docker to run LLM-generated co
 ```
 
 #### Set ENV variables:
-OPENAI_API_KEY or AZURE_OPENAI_API_ENDPOINT and AZURE_OPENAI_API_KEY based on whether you are calling OpenAI APIs directly or through Azure deployment.
+Set `OPENROUTER_API_KEY` for OpenRouter access.
 
 ***Example***
 ```bash
-export AZURE_OPENAI_API_KEY="your_api_key_here"
+export OPENROUTER_API_KEY="your_api_key_here"
 Save and reload your shell:
 
 source ~/.bashrc   # or ~/.zshrc

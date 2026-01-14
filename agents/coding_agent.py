@@ -1,19 +1,19 @@
 """
 This file defines a coding agent that can execute code based on user queries and
-system prompts in docker container.
+system prompts in a Docker container. Azure support has been removed; OpenRouter is the default.
 """
 
 import asyncio
 import logging
+import sys
+import os
+
 from autogen_agentchat import EVENT_LOGGER_NAME
 from autogen_agentchat.agents import CodeExecutorAgent, CodingAssistantAgent
 from autogen_agentchat.base import TaskResult
 from autogen_agentchat.logging import ConsoleLogHandler
 from autogen_agentchat.teams import RoundRobinGroupChat, StopMessageTermination
 from autogen_ext.code_executor.docker_executor import DockerCommandLineCodeExecutor
-
-import sys
-import os
 
 from agents.llm_factory import get_llm_chat_openai
 
@@ -27,12 +27,7 @@ logger.addHandler(ConsoleLogHandler())
 logger.setLevel(logging.INFO)
 
 
-
 async def coding_agent(user_query, system_prompt) -> TaskResult:
-    from autogen_ext.models import AzureOpenAIChatCompletionClient
-    from azure.identity import DefaultAzureCredential, get_bearer_token_provider
-
-    # Create the token provider
     client = get_llm_chat_openai()
 
     # Add path to your repo here
@@ -52,6 +47,7 @@ async def coding_agent(user_query, system_prompt) -> TaskResult:
         )
 
     return result  # Return result of async call
+
 
 def run_coding_agent(user_query, database, functions, include_statements, function_imports):
     system_prompt = generate_code_generation_prompt(req_databases=database, functions=functions, include_statements=include_statements, function_imports=function_imports)
