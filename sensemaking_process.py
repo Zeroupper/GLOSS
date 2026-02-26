@@ -287,18 +287,23 @@ class SenseMaker:
             except Exception as e:
                 retries += 1
                 if retries > max_retries:
-                    print(f"Failed after {max_retries + 1} attempts: {str(e)}")
+                    print(f"Failed after {max_retries + 1} attempts: [{type(e).__name__}] {e}")
+                    import traceback
+                    traceback.print_exc()
                     return "FAILED"
+                else:
+                    print(f"Attempt {retries} failed: [{type(e).__name__}] {e}, retrying...")
 
 
 if __name__ == "__main__":
 
 
     presentation_instructions_ = '''
-    clear and concise
+    explain in details
     '''
     query = '''
-    on aug 28 2025, for test004 what was most used app by duration?'''
+    What was the highest heart rate recorded for user test004?
+    '''
     SenseMaker(
         query,
         presentation_instructions_).make_sense(verbose=VERBOSE)

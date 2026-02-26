@@ -1,10 +1,11 @@
 # Use the official miniconda3 image as the base
-FROM continuumio/miniconda3
+FROM continuumio/miniconda3:24.7.1-0
 
 # Set the working directory
 WORKDIR /app
 
-ENV OPENROUTER_API_KEY="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"
+ARG OPENROUTER_API_KEY
+ENV OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
 ENV MONGO_URI="add your mongo URI"
 ENV RUNNING_IN_DOCKER=true
 
@@ -20,7 +21,7 @@ RUN /bin/bash ./install_packages.sh
 
 COPY stress-detection-algorithm-code-python /app/repo/stress-detection-algorithm-code-python
 
-RUN /bin/bash -c "pip install -e ./repo/stress-detection-algorithm-code-python/"
+RUN pip install setuptools pymongo && pip install -e ./repo/stress-detection-algorithm-code-python/
 
 # Activate the environment
 SHELL ["conda", "run", "-n", "gloss-sensemaking", "/bin/bash", "-c"]
