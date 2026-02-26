@@ -8,7 +8,7 @@ while IFS= read -r package; do
     (echo "Conda failed for $package, trying pip..." && \
      pip install "$package" || \
      echo "Both conda and pip failed for $package, skipping.")
-done < <(grep -oP '(?<=- )\S+' environment.yml)
+done < <(grep -oP '(?<=- )\S+' environment_linux.yml)
 
 conda clean -afy
 
