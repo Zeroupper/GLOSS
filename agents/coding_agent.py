@@ -20,7 +20,7 @@ from agents.llm_factory import get_llm_chat_openai
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from agents.agent_utils import generate_code_generation_prompt
-from agents.config import DOCKER_NAME
+from agents.config import DOCKER_NAME, WORK_DIR
 
 logger = logging.getLogger(EVENT_LOGGER_NAME)
 logger.addHandler(ConsoleLogHandler())
@@ -30,8 +30,7 @@ logger.setLevel(logging.INFO)
 async def coding_agent(user_query, system_prompt) -> TaskResult:
     client = get_llm_chat_openai()
 
-    # Add path to your repo here
-    async with DockerCommandLineCodeExecutor(work_dir="path/to/repo/here",
+    async with DockerCommandLineCodeExecutor(work_dir=WORK_DIR,
                                              image=DOCKER_NAME, auto_remove=False,
                                              stop_container=False) as code_executor:
         code_executor_agent = CodeExecutorAgent("code_executor", code_executor=code_executor)
@@ -45,6 +44,14 @@ async def coding_agent(user_query, system_prompt) -> TaskResult:
             task=user_query,
             termination_condition=StopMessageTermination(),
         )
+
+    # Debug: log all messages in the conversation
+    print(f"\n  [DEBUG] Coding agent finished with {len(result.messages)} messages:")
+    for i, m in enumerate(result.messages):
+        src = m.source
+        mtype = type(m).__name__
+        content_preview = m.content[:120].replace('\n', '\\n') if m.content else '<empty>'
+        print(f"  [DEBUG]   msg[{i}] ({src}/{mtype}) len={len(m.content)}: {content_preview}")
 
     return result  # Return result of async call
 

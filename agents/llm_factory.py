@@ -42,9 +42,14 @@ def get_llm_chat_openai(model_name: str = OPENROUTER_MODEL, temperature: float =
     """Return a configured OpenRouter chat client for autogen_ext."""
     key = _require_openrouter_key()
     return OpenAIChatCompletionClient(
-        openai_api_key=key,
+        api_key=key,
         model=model_name,
         temperature=temperature,
         base_url=OPENROUTER_BASE_URL,
-        extra_headers=_get_openrouter_headers(),
+        default_headers=_get_openrouter_headers(),
+        model_capabilities={
+            "vision": True,
+            "function_calling": True,
+            "json_output": True,
+        },
     )
